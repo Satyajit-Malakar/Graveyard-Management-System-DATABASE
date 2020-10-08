@@ -1,0 +1,22 @@
+CREATE TABLE Corps (
+                    C_ID VARCHAR2(15) PRIMARY KEY,
+                    C_Name VARCHAR2(20) NOT NULL,
+                    Death_Certificate_No VARCHAR2(20) UNIQUE,
+                    NID_No NUMBER(16) UNIQUE,
+                    C_Address VARCHAR2(20)NOT NULL,
+                    Date_of_Birth VARCHAR2(10) NOT NULL,
+                    Date_of_Death VARCHAR2(10) NOT NULL,
+                    Age VARCHAR2(3),
+                    Reason_of_Death VARCHAR2(50),
+                    Gender VARCHAR2(6),
+                    CHECK (Gender='Male' or Gender='Female')
+                    );
+
+CREATE TABLE Relative(
+                      R_Name VARCHAR2(20) NOT NULL,
+                      R_Address VARCHAR2(20) NOT NULL,
+                      R_Phone_No VARCHAR2(20) NOT NULL,
+                      C_ID VARCHAR2 (15) NOT NULL,
+                      FOREIGN KEY (C_ID) REFERENCES Corps (C_ID),
+                      CONSTRAINT PK_123 PRIMARY KEY (C_ID, R_Name)
+                      );

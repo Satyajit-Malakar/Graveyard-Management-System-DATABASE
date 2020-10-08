@@ -1,0 +1,128 @@
+CREATE TABLE City_Corporation(
+                              ID VARCHAR2(10) PRIMARY KEY, 
+                              Name VARCHAR2(50) NOT NULL, 
+                              E_mail VARCHAR2(50) UNIQUE, 
+                              Phone_Number NUMBER(11) UNIQUE, 
+                              Address VARCHAR2(150) NOT NULL
+                              );
+
+CREATE TABLE Graveyard(	
+                       GrvYrd_ID VARCHAR2(15) PRIMARY KEY, 
+                       GrvYrd_Name VARCHAR2(50) NOT NULL, 
+                       GrvYrd_Area VARCHAR2(15) NOT NULL, 
+                       GrvYrd_Address VARCHAR2(150) NOT NULL, 
+                       ID VARCHAR2(10),
+                       FOREIGN KEY (ID) REFERENCES  City_Corporation (ID)
+                       );
+
+CREATE TABLE Manager(
+                     M_ID VARCHAR2(15) PRIMARY KEY, 
+                     M_Name VARCHAR2(50) NOT NULL, 
+                     NID VARCHAR2(16) UNIQUE, 
+                     Address VARCHAR2(150) NOT NULL, 
+                     E_mail VARCHAR2(50) UNIQUE, 
+                     Phone_Number VARCHAR2(11) UNIQUE, 
+                     Gender VARCHAR2(6) NOT NULL,
+                            CHECK (Gender='Male' or Gender='Female'), 
+                     Blood_Group VARCHAR2(6) NOT NULL,
+                                 CHECK (Blood_Group='A+ve' or Blood_Group='A-ve' or Blood_Group='B+ve' or Blood_Group='B-ve'
+                                 or Blood_Group='AB+ve' or Blood_Group='AB-ve' or Blood_Group='O+ve' or Blood_Group='O-ve'),
+                     Date_of_Birth VARCHAR2(10) NOT NULL, 
+                     Hiredate DATE NOT NULL, 
+                     Salary VARCHAR2(6) NOT NULL, 
+                     GrvYrd_ID VARCHAR2(10),
+                     FOREIGN KEY (GrvYrd_ID) REFERENCES Graveyard (GrvYrd_ID)
+                     );
+
+CREATE TABLE Dept(
+                  Dept_ID VARCHAR2(10) PRIMARY KEY,
+                  Dept_Name VARCHAR2(50) NOT NULL
+                  );
+
+
+CREATE TABLE Emp(
+                 Emp_No VARCHAR2(10) PRIMARY KEY, 
+                 Emp_Name VARCHAR2(50) NOT NULL,
+                 NID VARCHAR2(16) UNIQUE, 
+                 Address VARCHAR2(150) NOT NULL, 
+                 E_mail VARCHAR2(50), 
+                 Phone_Number NUMBER(13) UNIQUE, 
+                 Blood_Group  VARCHAR2(6) NOT NULL,
+                 CHECK (Blood_Group='A+ve' or Blood_Group='A-ve' or Blood_Group='B+ve' or Blood_Group='B-ve'
+                        or Blood_Group='AB+ve' or Blood_Group='AB-ve' or Blood_Group='O+ve' or Blood_Group='O-ve'),
+                 Date_of_Birth DATE NOT NULL,
+                 Hiredate DATE NOT NULL,
+                 Salary VARCHAR2(6) NOT NULL,
+                 Gender VARCHAR2(6) NOT NULL,
+                 CHECK (Gender='Male' or Gender='Female'),
+                 Dept_ID VARCHAR2(10) NOT NULL, 
+                 M_ID VARCHAR2(15) NOT NULL,
+                 FOREIGN KEY (Dept_ID) REFERENCES Dept (Dept_ID),
+                 FOREIGN KEY (M_ID) REFERENCES Manager (M_ID)
+                 );
+
+
+CREATE TABLE Zone_Officer(
+                          O_ID VARCHAR2(15) PRIMARY KEY, 
+                          O_Name VARCHAR2(50) NOT NULL, 
+                          O_Address VARCHAR2(150) NOT NULL, 
+                          O_Phone_Number VARCHAR2(11) UNIQUE, 
+                          O_E_mail VARCHAR2(50) UNIQUE, 
+                          NID VARCHAR2(16) UNIQUE, 
+                          Gender VARCHAR2(6) NOT NULL,
+                                 CHECK (Gender='Male' or Gender='Female'),
+                          M_ID VARCHAR2(15),
+                          ID VARCHAR2(10), 
+                          FOREIGN KEY (M_ID) REFERENCES Manager (M_ID), 
+                          FOREIGN KEY (ID) REFERENCES City_Corporation (ID)
+                          );
+CREATE TABLE Corps (
+                    C_ID VARCHAR2(15) PRIMARY KEY,
+                    C_Name VARCHAR2(50) NOT NULL,
+                    NID VARCHAR2(16) UNIQUE,
+                    Death_Certificate_No VARCHAR2(20) UNIQUE,
+                    C_Address VARCHAR2(150) NOT NULL,
+                    Date_of_Birth DATE NOT NULL,
+                    Date_of_Death DATE NOT NULL,
+                    Reason_of_Death VARCHAR2(50),
+                    Gender VARCHAR2(6),
+                           CHECK (Gender='Male' or Gender='Female'),
+                    M_ID VARCHAR2(15),
+                    FOREIGN KEY (M_ID) REFERENCES Manager (M_ID) 
+                    );
+
+CREATE TABLE Relative(
+                      R_Name VARCHAR2(50) NOT NULL,
+                      R_Address VARCHAR2(150) NOT NULL,
+                      R_Phone_No VARCHAR2(11) UNIQUE,
+                      C_ID VARCHAR2 (15),
+                      M_ID VARCHAR2(15),
+                      FOREIGN KEY (C_ID) REFERENCES Corps (C_ID),
+                      FOREIGN KEY (M_ID) REFERENCES Manager (M_ID), 
+                      CONSTRAINT PK_123 PRIMARY KEY (C_ID, R_Name, M_ID)
+                      );
+
+
+CREATE TABLE Loc (
+                  Loc_ID VARCHAR2(10) PRIMARY KEY, 
+                  Block VARCHAR2(5) NOT NULL, 
+                  Plot VARCHAR2(5) NOT NULL
+                  );
+
+CREATE TABLE Grave_Size(
+                        Grave_Size_ID VARCHAR2(15) PRIMARY KEY, 
+                        Adult VARCHAR2(5), 
+                        Young VARCHAR2(5), 
+                        Child VARCHAR2(5)
+                        );
+
+CREATE TABLE Grave (
+                    Grave_ID VARCHAR2(15) PRIMARY KEY, 
+                    Loc_ID VARCHAR2(10), 
+                    Grave_Size_ID VARCHAR2(15),
+                    GrvYrd_ID VARCHAR2(15),
+                    C_ID VARCHAR2(15),
+                    FOREIGN KEY (Loc_ID) REFERENCES Loc (Loc_ID),
+                    FOREIGN KEY (C_ID) REFERENCES Corps (C_ID),
+                    FOREIGN KEY (GrvYrd_ID) REFERENCES Graveyard (GrvYrd_ID)
+                    );
